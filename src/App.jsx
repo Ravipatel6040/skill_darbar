@@ -1,22 +1,36 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import AdminLogin from "./pages/AdminLogin";
 import Dashboard from "./pages/Dashboard";
-import Navbar from "./components/Navbar";
+import Courses from "./pages/Courses";
 
 const AppLayout = () => {
   const location = useLocation();
 
-  // Hide navbar on admin login page
-  const hideNavbar = location.pathname === "/admin/login";
+  // Hide navbar & footer on admin login page
+  const hideLayout = location.pathname === "/admin/login";
 
   return (
     <>
-      {!hideNavbar && <Navbar />}
+      {!hideLayout && <Navbar />}
 
       <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+            <Route path="/courses" element={<Courses/>} />
+        <Route path="/contact" element={<Contact />} />
+
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
+
+      {!hideLayout && <Footer />}
     </>
   );
 };
