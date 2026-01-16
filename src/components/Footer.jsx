@@ -1,9 +1,6 @@
 import React from "react";
-import {
-  FaFacebookF,
-  FaInstagram,
-  FaTiktok
-} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaFacebookF, FaInstagram, FaTiktok } from "react-icons/fa";
 
 import logo from "../assets/Images/logo.png";
 
@@ -29,39 +26,34 @@ const Footer = () => {
           </p>
 
           <div className="flex gap-4 mt-2 text-xl">
+            <a
+              href="https://www.facebook.com/profile.php?id=61581912482367"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Skill Darbar Facebook"
+            >
+              <FaFacebookF className="hover:text-yellow-400 cursor-pointer transition" />
+            </a>
 
-            <div className="flex items-center gap-4">
-              <a
-                href="https://www.facebook.com/profile.php?id=61581912482367"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Skill Darbar Facebook"
-              >
-                <FaFacebookF className="hover:text-yellow-400 cursor-pointer transition" />
-              </a>
+            <a
+              href="https://www.instagram.com/skill_darbar/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Skill Darbar Instagram"
+            >
+              <FaInstagram className="hover:text-yellow-400 cursor-pointer transition" />
+            </a>
 
-              <a
-                href="https://www.instagram.com/skill_darbar/"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Skill Darbar Instagram"
-              >
-                <FaInstagram className="hover:text-yellow-400 cursor-pointer transition" />
-              </a>
-
-              <a
-                href="https://www.tiktok.com/@skill.darbar"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Skill Darbar TikTok"
-              >
-                <FaTiktok className="hover:text-yellow-400 cursor-pointer transition" />
-              </a>
-            </div>
-
+            <a
+              href="https://www.tiktok.com/@skill.darbar"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Skill Darbar TikTok"
+            >
+              <FaTiktok className="hover:text-yellow-400 cursor-pointer transition" />
+            </a>
           </div>
         </div>
-
 
         {/* COURSES */}
         <div>
@@ -69,20 +61,45 @@ const Footer = () => {
             Popular Courses
           </h3>
           <ul className="space-y-2 text-lg">
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Graphic Designing
+            <li>
+              <Link
+                to="/courses/graphic-designing"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Graphic Designing
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Video Editing
+            <li>
+              <Link
+                to="/courses/video-editing"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Video Editing
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Web Development
+            <li>
+              <Link
+                to="/courses/web-development"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Web Development
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              App Development
+            <li>
+              <Link
+                to="/courses/app-development"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                App Development
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Meta Ads
+            <li>
+              <Link
+                to="/courses/meta-ads"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Meta Ads
+              </Link>
             </li>
             <li className="hover:text-yellow-400 cursor-pointer transition">
               More upcoming...
@@ -96,18 +113,37 @@ const Footer = () => {
             Quick Links
           </h3>
           <ul className="space-y-2 text-lg">
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Home
+            <li>
+              <Link
+                to="/"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Home
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              About
+            <li>
+              <Link
+                to="/about"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                About
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              All Courses
+            <li>
+              <Link
+                to="/courses"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                All Courses
+              </Link>
             </li>
-
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Contact Us
+            <li>
+              <Link
+                to="/contact"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Contact Us
+              </Link>
             </li>
           </ul>
         </div>
@@ -118,17 +154,37 @@ const Footer = () => {
             Support
           </h3>
           <ul className="space-y-2 text-lg">
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Help Center
+            <li>
+              <Link
+                to="/help-center"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Help Center
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Terms & Conditions
+            <li>
+              <Link
+                to="/terms"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Terms & Conditions
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              Privacy Policy
+            <li>
+              <Link
+                to="/privacy-policy"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                Privacy Policy
+              </Link>
             </li>
-            <li className="hover:text-yellow-400 cursor-pointer transition">
-              FAQs
+            <li>
+              <Link
+                to="/faqs"
+                className="hover:text-yellow-400 cursor-pointer transition"
+              >
+                FAQs
+              </Link>
             </li>
           </ul>
         </div>

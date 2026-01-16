@@ -1,8 +1,12 @@
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 const EnquiryPage = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+
+  const [courseId, setCourseId] = useState(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -12,6 +16,32 @@ const EnquiryPage = () => {
     date: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  /* ================= FETCH COURSE ID BY SLUG ================= */
+  useEffect(() => {
+    const fetchCourse = async () => {
+      try {
+        const res = await axiosInstance.get("/admin/courses");
+        const list = Array.isArray(res.data?.data)
+          ? res.data.data
+          : res.data;
+
+        const found = list.find((c) => c.slug === slug);
+        if (!found) throw new Error("Course not found");
+
+        setCourseId(found.id);
+      } catch (err) {
+        console.error(err);
+        setError("Invalid course");
+      }
+    };
+
+    fetchCourse();
+  }, [slug]);
+
+  /* ================= INPUT HANDLER ================= */
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -19,10 +49,34 @@ const EnquiryPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  /* ================= SUBMIT ================= */
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Enquiry Data:", formData, "Course:", slug);
-    alert("Enquiry Submitted Successfully!");
+    if (!courseId) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await axiosInstance.post(
+        `/courses/${courseId}/enquiry`,
+        formData
+      );
+
+      if (!res.data?.success) {
+        throw new Error(res.data?.message || "Submission failed");
+      }
+
+      navigate(`/qr/${slug}`);
+    } catch (err) {
+      console.error(err);
+      setError(
+        err.response?.data?.message ||
+        "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,62 +87,55 @@ const EnquiryPage = () => {
         <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-2">
           Course Enquiry
         </h2>
+
         <p className="text-center text-gray-500 mb-6 capitalize">
           Enquiry for: <b>{slug.replace("-", " ")}</b>
         </p>
 
+        {/* ERROR */}
+        {error && (
+          <p className="text-red-500 text-center mb-4">{error}</p>
+        )}
+
         {/* FORM */}
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* NAME */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Name
-            </label>
+            <label className="block text-sm font-medium mb-1">Name</label>
             <input
               type="text"
               name="name"
               required
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your name"
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* PHONE */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Phone
-            </label>
+            <label className="block text-sm font-medium mb-1">Phone</label>
             <input
               type="tel"
               name="phone"
               required
               value={formData.phone}
               onChange={handleChange}
-              placeholder="Enter phone number"
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* EMAIL */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Email
-            </label>
+            <label className="block text-sm font-medium mb-1">Email</label>
             <input
               type="email"
               name="email"
               required
               value={formData.email}
               onChange={handleChange}
-              placeholder="Enter email address"
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* DATE */}
           <div>
             <label className="block text-sm font-medium mb-1">
               Preferred Date
@@ -99,32 +146,29 @@ const EnquiryPage = () => {
               required
               value={formData.date}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
-          {/* MESSAGE */}
           <div>
-            <label className="block text-sm font-medium mb-1">
-              Message
-            </label>
+            <label className="block text-sm font-medium mb-1">Message</label>
             <textarea
               name="message"
               rows="4"
               value={formData.message}
               onChange={handleChange}
-              placeholder="Your message..."
-              className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-            ></textarea>
+              className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-yellow-400"
+            />
           </div>
 
-          {/* SUBMIT */}
           <button
             type="submit"
-            className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold text-lg hover:bg-yellow-500 transition"
+            disabled={loading || !courseId}
+            className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold text-lg hover:bg-yellow-500 transition disabled:opacity-60"
           >
-            Submit Enquiry
+            {loading ? "Submitting..." : "Submit Enquiry"}
           </button>
+
         </form>
       </div>
     </div>

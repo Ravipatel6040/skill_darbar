@@ -12,16 +12,26 @@ import Courses from "./pages/Courses";
 import CourseDetails from "./pages/CourseDetails";
 import EnquiryPage from "./pages/EnquiryPage";
 import ScrollToTop from "./components/ScrollToTop";
+import AddCourse from "./components/admin/AddCourse";
+import CourseEnquiry from "./components/admin/CourseEnquiry";
+import QrPage from "./pages/QrPage";
+import PaymentDetails from "./components/admin/PaymentDetails";
 
 const AppLayout = () => {
   const location = useLocation();
 
   // Hide navbar & footer on admin login page
-  const hideLayout = location.pathname === "/admin/login";
+  // const hideLayout = location.pathname === "/admin/login";
+  // const hideLay = location.pathname === "/dashboard";
+
+   const hideLayout =
+    location.pathname === "/admin/login" ||
+    location.pathname.startsWith("/dashboard");
 
   return (
     <>
       {!hideLayout && <Navbar />}
+      {/* {!hideLay && <Dashboard />} */}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -29,11 +39,16 @@ const AppLayout = () => {
             <Route path="/courses" element={<Courses/>} />
             <Route path="/course/:slug" element={<CourseDetails />} />
             <Route path="/enquiry/:slug" element={<EnquiryPage />} />
+            <Route path="/qr/:slug" element={<QrPage />} />
 
         <Route path="/contact" element={<Contact />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+       <Route path="/dashboard" element={<Dashboard />}>
+  <Route path="add-course" element={<AddCourse />} />
+  <Route path="enquiry" element={<CourseEnquiry />} />
+  <Route path="payment" element={<PaymentDetails />} />
+</Route>
       </Routes>
 
       {!hideLayout && <Footer />}

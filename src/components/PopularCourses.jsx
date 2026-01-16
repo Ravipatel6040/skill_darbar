@@ -1,53 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-// IMAGES
-import graphicImg from "../assets/images/graphic.png";
-import videoImg from "../assets/images/video01.png";
-import appImg from "../assets/images/app.jpg";
-import webImg from "../assets/images/web.jfif";
-import metaImg from "../assets/images/meta.avif";
+import axiosInstance from "../utils/axiosInstance";
 
 function PopularCourses() {
   const navigate = useNavigate();
+  const [courses, setCourses] = useState([]);
 
-  const courses = [
-    {
-      slug: "graphic-design",
-      title: "Graphic Designing",
-      img: graphicImg,
-      duration: "3 Months",
-      fees: "₹15,000",
-    },
-    {
-      slug: "video-editing",
-      title: "Video Editing",
-      img: videoImg,
-      duration: "2 Months",
-      fees: "₹12,000",
-    },
-    {
-      slug: "app-development",
-      title: "App Development",
-      img: appImg,
-      duration: "6 Months",
-      fees: "₹35,000",
-    },
-    {
-      slug: "web-development",
-      title: "Web Development",
-      img: webImg,
-      duration: "5 Months",
-      fees: "₹30,000",
-    },
-    {
-      slug: "meta-ads",
-      title: "Meta Ads",
-      img: metaImg,
-      duration: "1 Month",
-      fees: "₹8,000",
-    },
-  ];
+  // ================= FETCH COURSES =================
+  const fetchCourses = async () => {
+    try {
+      const res = await axiosInstance.get("/admin/courses");
+      const list = Array.isArray(res.data?.data)
+        ? res.data.data
+        : Array.isArray(res.data)
+        ? res.data
+        : [];
+      setCourses(list);
+    } catch (err) {
+      console.error("Fetch failed", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
 
   return (
     <div className="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
@@ -63,28 +39,34 @@ function PopularCourses() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {courses.map((course) => (
           <div
-            key={course.slug}
+            key={course.id}
             className="group rounded-xl overflow-hidden bg-white border border-black/20 shadow-md hover:-translate-y-2 transition"
           >
-            <img
-              src={course.img}
-              alt={course.title}
-              className="w-full h-56 object-cover group-hover:scale-110 transition"
-            />
+            {course.image ? (
+              <img
+                src={`http://192.168.1.13:8000/storage/${course.image}`}
+                alt={course.name}
+                className="w-full h-56 object-cover group-hover:scale-110 transition"
+              />
+            ) : (
+              <div className="w-full h-56 bg-gray-200 flex items-center justify-center text-gray-400">
+                No Image
+              </div>
+            )}
 
             <div className="px-6 py-5">
-              <h3 className="font-semibold text-xl">{course.title}</h3>
+              <h3 className="font-semibold text-xl">{course.name}</h3>
 
               <p className="mt-2 text-gray-600">
                 <b>Duration:</b> {course.duration}
               </p>
 
               <p className="text-gray-600">
-                <b>Fees:</b> {course.fees}
+                <b>Fees:</b> ₹{course.fees}
               </p>
 
               <button
-                onClick={() => navigate(`/course/${course.slug}`)}
+                onClick={() => navigate(`/course/${course.slug || course.id}`)}
                 className="mt-5 w-full border border-yellow-400 text-yellow-500 py-2.5 rounded-md hover:bg-yellow-400 hover:text-black transition"
               >
                 View Details
@@ -107,7 +89,6 @@ function PopularCourses() {
             </button>
           </div>
         </div>
-
       </div>
     </div>
   );

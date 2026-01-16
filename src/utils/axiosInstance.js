@@ -1,14 +1,15 @@
+// src/utils/axiosInstance.js
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.1.27:8000/api",
+  baseURL: "http://192.168.1.13:8000/api",
   headers: {
     Accept: "application/json",
   },
   withCredentials: true,
 });
 
-// 🔐 Auto attach token
+// 🔐 Automatically attach token if it exists
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
